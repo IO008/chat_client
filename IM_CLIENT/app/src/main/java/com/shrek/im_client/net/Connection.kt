@@ -1,31 +1,45 @@
 package com.shrek.im_client.net
 
 import android.util.Log
+import com.shrek.im_client.log.IMLog
 import java.net.Socket
 
-class Connection {
+class Connection : IConnection {
 
-    suspend fun connected(address: String, port: Int) {
+    private var socket: Socket? = null
+
+    override suspend fun connected(address: String, port: Int) {
+
         try {
-            val socket = Socket(address, port)
+            if (socket == null) {
+                socket = Socket(address, port)
+            }
+            socket?.let {
+                val inputStream = it.getInputStream()
+                val outputStream = it.getOutputStream()
 
-            val inputStream = socket.getInputStream()
-            val outputStream = socket.getOutputStream()
+                while (true) {
+                    outputStream.write("Hello, server!".toByteArray())
 
-            while (true) {
-                outputStream.write("Hello, server!".toByteArray())
+                    val buffer = ByteArray(1024)
+                    val bytesRead = inputStream.read(buffer)
+                    val message = String(buffer, 0, bytesRead)
 
-                val buffer = ByteArray(1024)
-                val bytesRead = inputStream.read(buffer)
-                val message = String(buffer, 0, bytesRead)
-
-                Log.d("shrek", "Received message from server: $message")
-                Thread.sleep(3000)
+                    IMLog.d("Received message from server: $message")
+                    Thread.sleep(3000)
+                }
             }
 
-            //socket.close()
         } catch (e: Exception) {
-            Log.d("shrek","Error connecting to server: ${e}")
+            IMLog.d("Error connecting to server: $e")
+        }
+    }
+
+    override suspend fun close() {
+        try {
+            socket?.close()
+        } catch (e: Exception) {
+            IMLog.d("Error closing connection: $e")
         }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.shrek.im_client.databinding.FragmentHomeBinding
+import com.shrek.im_client.log.IMLog
 
 class HomeFragment : Fragment() {
 
@@ -30,8 +31,11 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         binding.btnStart.setOnClickListener {
-            Log.d("shrek", "click start")
-            homeViewModel.connect("10.0.2.2", 8999)
+            homeViewModel.connect()
+        }
+
+        binding.btnClose.setOnClickListener {
+            homeViewModel.close()
         }
         return root
     }

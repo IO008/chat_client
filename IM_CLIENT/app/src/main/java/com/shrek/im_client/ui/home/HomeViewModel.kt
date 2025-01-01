@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shrek.im_client.net.Connection
+import com.shrek.im_client.net.ConnectionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,12 +16,16 @@ class HomeViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    private val connection = Connection()
 
-    fun connect(address: String, port: Int) {
+    fun connect() {
         viewModelScope.launch(Dispatchers.IO) {
+            ConnectionManager.startMessageConnection()
+        }
+    }
 
-            connection.connected(address, port)
+    fun close() {
+        viewModelScope.launch(Dispatchers.IO) {
+            ConnectionManager.closeMessageConnection()
         }
     }
 }
