@@ -1,8 +1,10 @@
 package com.shrek.im_client.net
 
+import java.util.concurrent.ConcurrentHashMap
+
 object ConnectionManager {
 
-    private val connections: HashMap<ConnectionType, IConnection> = hashMapOf()
+    private val connections: ConcurrentHashMap<ConnectionType, IConnection> = ConcurrentHashMap()
 
     private fun createMessageConnection(): IConnection {
         if (connections[ConnectionType.Message] == null) {
@@ -18,5 +20,9 @@ object ConnectionManager {
     suspend fun closeMessageConnection() {
         createMessageConnection().close()
         connections.remove(ConnectionType.Message)
+    }
+
+    suspend fun getMessageConnection(): IConnection? {
+        return connections[ConnectionType.Message]
     }
 }

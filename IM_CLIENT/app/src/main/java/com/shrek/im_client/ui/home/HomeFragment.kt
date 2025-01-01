@@ -1,15 +1,12 @@
 package com.shrek.im_client.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.shrek.im_client.databinding.FragmentHomeBinding
-import com.shrek.im_client.log.IMLog
 
 class HomeFragment : Fragment() {
 
@@ -32,6 +29,7 @@ class HomeFragment : Fragment() {
 
         binding.btnStart.setOnClickListener {
             homeViewModel.connect()
+            homeViewModel.loopRead()
         }
 
         binding.btnClose.setOnClickListener {
